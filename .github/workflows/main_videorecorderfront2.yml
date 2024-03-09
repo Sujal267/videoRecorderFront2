@@ -39,22 +39,13 @@ jobs:
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    permissions:
-      id-token: write #This is required for requesting the JWT
-
+    
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
           name: node-app
       
-      - name: Login to Azure
-        uses: azure/login@v1
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_ED9E55817A1A4EF995BC5A223B08C7F9 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_D2C8490B091C4DF9AA54FCF9F5909F43 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_0F39C8187E8F4318B801DB0D304B57DE }}
-
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2
         id: deploy-to-webapp
@@ -62,4 +53,4 @@ jobs:
           app-name: 'videoRecorderFront2'
           slot-name: 'Production'
           package: .
-          
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_DA557CC7D7684325A3C410B6A1B411DA }}
